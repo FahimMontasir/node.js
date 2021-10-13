@@ -4,6 +4,9 @@ const { validateCourse } = require("../helper/validate");
 const { Category } = require("../models/category");
 const Course = require("../models/courses");
 
+const authMiddleware = require("../middleware/auth");
+const adminMiddleware = require("../middleware/admin");
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -11,7 +14,8 @@ router.get("/", async (req, res) => {
   res.send(courses);
 });
 
-router.post("/", async (req, res) => {
+//used middleware func to protect api route
+router.post("/", authMiddleware, async (req, res) => {
   const { error } = validateCourse(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -46,7 +50,8 @@ router.put("/:id", async (req, res) => {
   res.send(course);
 });
 
-router.delete("/:id", async (req, res) => {
+//two middleware added these will execute one after another
+router.delete("/:id", [authMiddleware, adminMiddleware], async (req, res) => {
   const course = await Course.findByIdAndRemove(req.params.id);
 
   if (!course) return res.status(404).send("the course was not found");

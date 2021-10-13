@@ -22,4 +22,4 @@ router.post("/", async (req, res) => {
   res.send(category);
 });
 
-exports = router;
+module.exports = router;

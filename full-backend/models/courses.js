@@ -18,4 +18,4 @@ const Course = mongoose.model(
   })
 );
 
-exports = Course;
+module.exports = Course;
